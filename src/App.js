@@ -1,24 +1,35 @@
-import logo from './logo.svg';
+import { Box , Stack} from '@mui/material';
 import './App.css';
+import RightBar from './components/RightBar';
+import SideButton from "./components/Sidebar"
+import MiddleBar from './components/MiddleBar';
+import Nav from './components/Nav';
+import Graph from './components/Graph';
+import Speedometer from './components/Speedometer';
+import DashBoard from './components/DashBoard';
 
 function App() {
+  
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+
+    <Box>
+      <Nav/>
+      <DashBoard/>
+      <Stack direction={'row'} spacing={2} justifyContent={'space-between'}>
+        <SideButton/>
+        <MiddleBar/>
+        <RightBar/>
+      </Stack>
+      <Stack direction={'row'} spacing={2} justifyContent={'space-between'}>
+      <SideButton/>
+        <Speedometer/>
+      </Stack>
+      
+      <Graph/>
+    </Box>
+
+
+  
   );
 }
 
