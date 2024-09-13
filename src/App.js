@@ -1,14 +1,32 @@
 import "./App.css";
 import Dashbord from "./Pages/Dashbord";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
+import PrivateRoute from "./utils/PrivateRoute";
+import LoginPage from "./Pages/LoginPage";
+import { PrivateRouteLogin } from "./utils/PrivateRoute";
 
 function App() {
   return (
-    <Router>
+    <>
       <Routes>
-        <Route path="/Dashbord" element={<Dashbord />} />
+        <Route
+          path="/login"
+          element={
+            <PrivateRouteLogin>
+              <LoginPage />
+            </PrivateRouteLogin>
+          }
+        />
+        <Route
+          path="/Dashbord"
+          element={
+            <PrivateRoute>
+              <Dashbord />
+            </PrivateRoute>
+          }
+        />
       </Routes>
-    </Router>
+    </>
   );
 }
 
