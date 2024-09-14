@@ -63,14 +63,14 @@ export const AuthProvider = ({ children }) => {
     if (loading) {
       setloading(false);
     }
-  }, [authToken, loading, logout]); // Add logout to the dependency array
+  }, [authToken, loading]); // Add logout to the dependency array
 
   useEffect(() => {
     if (loading) {
       UpdateToken();
     }
 
-    let fourMinuteInterval = 60 * 60 * 60 * 4; // 4 hours in milliseconds
+    let fourMinuteInterval = 240000;
     const interval = setInterval(() => {
       if (authToken) {
         UpdateToken();
@@ -100,7 +100,7 @@ export const AuthProvider = ({ children }) => {
       setauthToken(data);
       setUser(jwtDecode(data.access)); // Set user data
       localStorage.setItem("authToken", JSON.stringify(data)); // Save token to localStorage
-      navigate("/"); // Navigate to home after login
+      navigate("/Dashbord"); // Navigate to home after login
     } else {
       throw new Error(data.error);
     }
@@ -110,6 +110,7 @@ export const AuthProvider = ({ children }) => {
     login,
     user,
     logout,
+    authToken,
   };
 
   return (

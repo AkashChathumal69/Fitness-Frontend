@@ -25,6 +25,7 @@ function App() {
             </PrivateRoute>
           }
         />
+        <Route path="/logout" element={<h1>Not Found</h1>} />
       </Routes>
     </>
   );
