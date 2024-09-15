@@ -1,90 +1,78 @@
 import React, { useState } from 'react';
-import {
-  Card,
-  CardContent,
-  Typography,
-  TextField,
-  Select,
-  MenuItem,
-  Button,
-  Box,
-  FormControl,
-  InputLabel
-} from '@mui/material';
+import { Box, TextField, Button, Typography, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
 
-
-const activities = [
-  { name: 'Walking', metsValue: 3.5 },
-  { name: 'Running', metsValue: 8 },
-  { name: 'Cycling', metsValue: 7.5 },
-  { name: 'Swimming', metsValue: 6 },
-];
-
-const RightBar = () => {
+const CalorieBurnCalculator = () => {
   const [weight, setWeight] = useState('');
-  const [activity, setActivity] = useState(activities[0]);
   const [duration, setDuration] = useState('');
+  const [activity, setActivity] = useState('');
   const [caloriesBurned, setCaloriesBurned] = useState(null);
 
-  const calculateCalories = () => {
-    const weightKg = parseFloat(weight);
-    const durationHours = parseFloat(duration) / 60;
-    const calories = activity.metsValue * 3.5 * weightKg / 200 * durationHours * 60;
-    setCaloriesBurned(Math.round(calories));
+  const activities = {
+    walking: 3.5,
+    jogging: 7,
+    cycling: 5.5,
+    swimming: 6,
+    // MET values (Metabolic Equivalent of Task)
+  };
+
+  const calculateCaloriesBurned = () => {
+    if (weight && duration && activity) {
+      // Calories Burned = (MET * weight in kg * duration in hours)
+      const met = activities[activity];
+      const durationInHours = duration / 60;
+      const calories = met * weight * durationInHours;
+      setCaloriesBurned(calories.toFixed(2));
+    }
   };
 
   return (
-    <Box flex={3}  p={2} sx={{display:{xs:"none", sm:"block"}}}>
-
-<Card sx={{ maxWidth: 300, margin: 'auto', mt: 2 }}>
-      <CardContent>
-        <Typography variant="h5" component="div" gutterBottom>
-          Calorie Calculator
-        </Typography>
-        <Box component="form" sx={{ '& > :not(style)': { m: 1, width: '25ch' } }}>
-          <TextField
-            label="Weight (kg)"
-            type="number"
-            value={weight}
-            onChange={(e) => setWeight(e.target.value)}
-            fullWidth
-          />
-          <FormControl fullWidth>
-            <InputLabel id="activity-select-label">Activity</InputLabel>
-            <Select
-              labelId="activity-select-label"
-              value={activity.name}
-              label="Activity"
-              onChange={(e) => setActivity(activities.find(a => a.name === e.target.value))}
-            >
-              {activities.map((act) => (
-                <MenuItem key={act.name} value={act.name}>
-                  {act.name}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-          <TextField
-            label="Duration (minutes)"
-            type="number"
-            value={duration}
-            onChange={(e) => setDuration(e.target.value)}
-            fullWidth
-          />
-          <Button variant="contained" onClick={calculateCalories} fullWidth>
-            Calculate Calories
-          </Button>
-        </Box>
-        {caloriesBurned !== null && (
-          <Typography variant="h6" sx={{ mt: 2, textAlign: 'center' }}>
-            Calories Burned: {caloriesBurned}
+    <Box flex={3} p={2} sx={{ display: { xs: "none", sm: "block" } }}>
+      <Typography variant="h6" gutterBottom>
+        Calorie Burn Calculator
+      </Typography>
+      <TextField
+        label="Weight (kg)"
+        type="number"
+        value={weight}
+        onChange={(e) => setWeight(e.target.value)}
+        fullWidth
+        margin="normal"
+        size="small"
+      />
+      <TextField
+        label="Duration (minutes)"
+        type="number"
+        value={duration}
+        onChange={(e) => setDuration(e.target.value)}
+        fullWidth
+        margin="normal"
+        size="small"
+      />
+      <FormControl fullWidth margin="normal" size="small">
+        <InputLabel>Activity</InputLabel>
+        <Select
+          value={activity}
+          label="Activity"
+          onChange={(e) => setActivity(e.target.value)}
+        >
+          <MenuItem value="walking">Walking</MenuItem>
+          <MenuItem value="jogging">Jogging</MenuItem>
+          <MenuItem value="cycling">Cycling</MenuItem>
+          <MenuItem value="swimming">Swimming</MenuItem>
+        </Select>
+      </FormControl>
+      <Button variant="contained" onClick={calculateCaloriesBurned} sx={{ mt: 2 }} fullWidth>
+        Calculate Calories Burned
+      </Button>
+      {caloriesBurned && (
+        <Box sx={{ mt: 2 }}>
+          <Typography variant="body1">
+            Estimated Calories Burned: {caloriesBurned} kcal
           </Typography>
-        )}
-      </CardContent>
-    </Card>
-
+        </Box>
+      )}
     </Box>
-  )
+  );
 };
 
-export default RightBar
+export default CalorieBurnCalculator;

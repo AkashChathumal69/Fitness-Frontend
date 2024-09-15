@@ -6,7 +6,7 @@ import ListItemButton from '@mui/material/ListItemButton';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import Divider from '@mui/material/Divider';
-import Inbox from '@mui/icons-material/Inbox'
+import HomeIcon from '@mui/icons-material/Home';
 import Task from '@mui/icons-material/Task'
 import Settings from '@mui/icons-material/Settings'
 import Info from '@mui/icons-material/Info'
@@ -18,24 +18,24 @@ import Feedback from '@mui/icons-material/Feedback'
 const SideButton = () => {
   return (
     
-      <Box flex={1}  p={2} sx={{display:{xs:"none", sm:"block"}}}>
+      <Box flex={1}  p={2} sx={{display:{xs:"none", sm:"block"},position:"sticky"}}>
 
        <List>
           <ListItem disablePadding>
             <ListItemButton LinkComponent={'a'} href='#Home'>
               <ListItemIcon>
-                <Inbox/>
+                <HomeIcon/>
               </ListItemIcon>
-              <ListItemText primary="Inbox" />
+              <ListItemText primary="Home" />
             </ListItemButton>
           </ListItem>
 
           <ListItem disablePadding>
-            <ListItemButton LinkComponent={'a'} href='#Task'>
+            <ListItemButton LinkComponent={'a'} href='#mealplan'>
               <ListItemIcon>
                 <Task/>
               </ListItemIcon>
-              <ListItemText primary="Task" />
+              <ListItemText primary="Meal Plan" />
             </ListItemButton>
           </ListItem>
 
