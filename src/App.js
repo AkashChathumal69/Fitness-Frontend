@@ -7,25 +7,27 @@ import { PrivateRouteLogin } from "./utils/PrivateRoute";
 
 function App() {
   return (
-
-    <Box>
-      <Nav/>
-      <DashBoard/>
-      <Stack direction={'row'} spacing={2} justifyContent={'space-between'}>
-        <SideButton/>
-        <MiddleBar/>
-        <RightBar/>
-      </Stack>
-      <Stack direction={'row'} spacing={2} justifyContent={'space-between'}>
-      <SideButton/>
-        <Speedometer/>
-      </Stack>
-      
-      <Graph/>
-    </Box>
-
-
-  
+    <>
+      <Routes>
+        <Route
+          path="/login"
+          element={
+            <PrivateRouteLogin>
+              <LoginPage />
+            </PrivateRouteLogin>
+          }
+        />
+        <Route
+          path="/Dashbord"
+          element={
+            <PrivateRoute>
+              <Dashbord />
+            </PrivateRoute>
+          }
+        />
+        <Route path="/logout" element={<h1>Not Found</h1>} />
+      </Routes>
+    </>
   );
 }
 
