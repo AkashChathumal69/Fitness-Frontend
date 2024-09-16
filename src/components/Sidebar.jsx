@@ -11,8 +11,10 @@ import Task from '@mui/icons-material/Task'
 import Settings from '@mui/icons-material/Settings'
 import Info from '@mui/icons-material/Info'
 import Feedback from '@mui/icons-material/Feedback'
+import { DarkMode } from '@mui/icons-material';
+import Switch from '@mui/material/Switch';
 
-
+const label = { inputProps: { 'aria-label': 'Switch demo' } };
 
 
 const SideButton = () => {
@@ -65,6 +67,15 @@ const SideButton = () => {
               <Feedback/>
               </ListItemIcon>
               <ListItemText primary="FeedBack" />
+            </ListItemButton>
+          </ListItem>
+
+          <ListItem disablePadding>
+            <ListItemButton LinkComponent={'a'} href='#feedback'>
+              <ListItemIcon>
+              <DarkMode/>
+              </ListItemIcon>
+              <Switch {...label} defaultChecked />
             </ListItemButton>
           </ListItem>
           

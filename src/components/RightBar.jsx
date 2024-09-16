@@ -3,6 +3,7 @@ import { Box, TextField, Button, Typography, Select, MenuItem, FormControl, Inpu
 
 const CalorieBurnCalculator = () => {
   const [weight, setWeight] = useState('');
+  const [height, setHeight] = useState('');
   const [duration, setDuration] = useState('');
   const [activity, setActivity] = useState('');
   const [caloriesBurned, setCaloriesBurned] = useState(null);
@@ -35,6 +36,15 @@ const CalorieBurnCalculator = () => {
         type="number"
         value={weight}
         onChange={(e) => setWeight(e.target.value)}
+        fullWidth
+        margin="normal"
+        size="small"
+      />
+        <TextField
+        label="Height (cm)"
+        type="number"
+        value={height}
+        onChange={(e) => setHeight(e.target.value)}
         fullWidth
         margin="normal"
         size="small"
