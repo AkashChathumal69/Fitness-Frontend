@@ -1,28 +1,44 @@
-import React, { useState } from 'react';
-import { 
-  Box, 
-  TextField, 
-  Button, 
-  Typography, 
-  Container, 
-  Paper, 
-  IconButton, 
-  InputAdornment, 
-  MenuItem
-} from '@mui/material';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import React, { useState, useContext } from "react";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import dayjs from "dayjs";
+import AuthContext from "../context/AuthContext";
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Container,
+  Paper,
+  IconButton,
+  InputAdornment,
+  MenuItem,
+} from "@mui/material";
+import { Visibility, VisibilityOff } from "@mui/icons-material";
 
 const Register = () => {
+  const { Registration } = useContext(AuthContext);
+
   const [formData, setFormData] = useState({
-    username: '',
-    age: '',
-    weight: '',
-    height: '',
-    gender: '',
-    password: '',
+    username: "",
+    email: "",
+    birthday: dayjs().format("YYYY-MM-DD"),
+    sex: "",
+    password: "",
   });
 
+  const [selectedDate, setSelectedDate] = useState(dayjs());
   const [showPassword, setShowPassword] = useState(false);
+
+  // Handle date changes and format to "MM/DD/YYYY"
+  const handleDateChange = (newDate) => {
+    setSelectedDate(newDate);
+    setFormData({
+      ...formData,
+      birthday: dayjs(newDate).format("YYYY-MM-DD"), // Formatting the date to "MM/DD/YYYY"
+    });
+  };
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -34,8 +50,8 @@ const Register = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    // Handle the registration logic here
-    console.log('Registration data:', formData);
+    console.log("Registration data:", formData);
+    Registration(formData); // Send the formatted data to the context function
   };
 
   const handleClickShowPassword = () => {
@@ -44,7 +60,16 @@ const Register = () => {
 
   return (
     <Container component="main" maxWidth="xs">
-      <Paper elevation={3} sx={{ mt: 8, p: 4, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+      <Paper
+        elevation={3}
+        sx={{
+          mt: 8,
+          p: 4,
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+        }}
+      >
         <Typography component="h1" variant="h5">
           Register
         </Typography>
@@ -59,39 +84,27 @@ const Register = () => {
             value={formData.username}
             onChange={handleChange}
           />
+
           <TextField
             margin="normal"
             required
             fullWidth
-            id="age"
-            label="Age"
-            name="age"
-            type="number"
-            value={formData.age}
+            id="email"
+            label="email"
+            name="email"
+            value={formData.email}
             onChange={handleChange}
           />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="weight"
-            label="Weight (kg)"
-            name="weight"
-            type="number"
-            value={formData.weight}
-            onChange={handleChange}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            id="height"
-            label="Height (cm)"
-            name="height"
-            type="number"
-            value={formData.height}
-            onChange={handleChange}
-          />
+
+          <LocalizationProvider dateAdapter={AdapterDayjs}>
+            <DatePicker
+              label="Birthday"
+              value={selectedDate}
+              onChange={handleDateChange}
+              renderInput={(params) => <TextField fullWidth {...params} />}
+            />
+          </LocalizationProvider>
+
           <TextField
             margin="normal"
             required
@@ -99,21 +112,22 @@ const Register = () => {
             select
             id="gender"
             label="Gender"
-            name="gender"
-            value={formData.gender}
+            name="sex"
+            value={formData.sex}
             onChange={handleChange}
           >
-            <MenuItem value="male">Male</MenuItem>
-            <MenuItem value="female">Female</MenuItem>
-            <MenuItem value="other">Other</MenuItem>
+            <MenuItem value="M">Male</MenuItem>
+            <MenuItem value="F">Female</MenuItem>
+            <MenuItem value="O">Other</MenuItem>
           </TextField>
+
           <TextField
             margin="normal"
             required
             fullWidth
             name="password"
             label="Password"
-            type={showPassword ? 'text' : 'password'}
+            type={showPassword ? "text" : "password"}
             id="password"
             value={formData.password}
             onChange={handleChange}
@@ -131,6 +145,7 @@ const Register = () => {
               ),
             }}
           />
+
           <Button
             type="submit"
             fullWidth

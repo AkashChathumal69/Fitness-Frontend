@@ -1,12 +1,49 @@
-import React, { useState } from 'react';
-import { Box, TextField, Button, Typography, Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import React, { useState } from "react";
+import {
+  Box,
+  TextField,
+  Button,
+  Typography,
+  Select,
+  MenuItem,
+  FormControl,
+  InputLabel,
+} from "@mui/material";
+import AuthContext from "../context/AuthContext";
+import { useContext } from "react";
+
+const CalorieBurnCalculator_api = async (
+  weight,
+  height,
+  duration,
+  activity
+) => {
+  const response = await fetch("http://localhost:8000/api/bmi", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      weight: weight,
+      height: height,
+      duration: duration,
+      activity: activity,
+    }),
+  });
+
+  const data = await response.json();
+
+  if (response.status === 200) {
+  } else {
+    alert("Error calculating calories burned");
+  }
+};
 
 const CalorieBurnCalculator = () => {
-  const [weight, setWeight] = useState('');
-  const [height, setHeight] = useState('');
-  const [duration, setDuration] = useState('');
-  const [activity, setActivity] = useState('');
-  const [caloriesBurned, setCaloriesBurned] = useState(null);
+  const [weight, setWeight] = useState("");
+  const [height, setHeight] = useState("");
+  const [duration, setDuration] = useState("");
+  const [activity, setActivity] = useState("");
 
   const activities = {
     walking: 3.5,
@@ -16,14 +53,10 @@ const CalorieBurnCalculator = () => {
     // MET values (Metabolic Equivalent of Task)
   };
 
-  const calculateCaloriesBurned = () => {
-    if (weight && duration && activity) {
-      // Calories Burned = (MET * weight in kg * duration in hours)
-      const met = activities[activity];
-      const durationInHours = duration / 60;
-      const calories = met * weight * durationInHours;
-      setCaloriesBurned(calories.toFixed(2));
-    }
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    console.log("Calorie Burn data:", weight, height, duration, activity);
+    CalorieBurnCalculator_api(weight, height, duration, activity); // Send the formatted data to the context function
   };
 
   return (
@@ -40,7 +73,7 @@ const CalorieBurnCalculator = () => {
         margin="normal"
         size="small"
       />
-        <TextField
+      <TextField
         label="Height (cm)"
         type="number"
         value={height}
@@ -71,16 +104,14 @@ const CalorieBurnCalculator = () => {
           <MenuItem value="swimming">Swimming</MenuItem>
         </Select>
       </FormControl>
-      <Button variant="contained" onClick={calculateCaloriesBurned} sx={{ mt: 2 }} fullWidth>
+      <Button
+        variant="contained"
+        onClick={handleSubmit}
+        sx={{ mt: 2 }}
+        fullWidth
+      >
         Calculate Calories Burned
       </Button>
-      {caloriesBurned && (
-        <Box sx={{ mt: 2 }}>
-          <Typography variant="body1">
-            Estimated Calories Burned: {caloriesBurned} kcal
-          </Typography>
-        </Box>
-      )}
     </Box>
   );
 };
