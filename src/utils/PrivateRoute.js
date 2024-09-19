@@ -4,16 +4,18 @@ import AuthContext from "../context/AuthContext";
 
 // Private Route that redirects to /login if the user is not authenticated
 const PrivateRoute = ({ children }) => {
-  const { user } = useContext(AuthContext);
+  const { user, authToken } = useContext(AuthContext);
 
-  return user ? children : <Navigate to="/login" />; // Redirect to login if not authenticated
+  // Ensure user and valid token are both available
+  return user && authToken ? children : <Navigate to="/login" />;
 };
 
 // Private Route that redirects to /Dashbord if the user is authenticated (for login page)
 const PrivateRouteLogin = ({ children }) => {
-  const { user } = useContext(AuthContext);
+  const { user, authToken } = useContext(AuthContext);
 
-  return user ? <Navigate to="/Dashbord" /> : children; // Redirect to dashboard if authenticated
+  // If the user is authenticated, redirect to dashboard
+  return user && authToken ? <Navigate to="/Dashbord" /> : children;
 };
 
 export default PrivateRoute;

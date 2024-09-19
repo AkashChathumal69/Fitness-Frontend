@@ -1,5 +1,5 @@
 import { createContext, useState, useEffect, useCallback } from "react";
-import { jwtDecode } from "jwt-decode"; // No curly braces needed for jwt-decode
+import { jwtDecode } from "jwt-decode"; // Corrected the import for jwtDecode
 import { useNavigate } from "react-router-dom";
 
 const AuthContext = createContext();
@@ -7,102 +7,144 @@ const AuthContext = createContext();
 export default AuthContext;
 
 export const AuthProvider = ({ children }) => {
-  const [authToken, setauthToken] = useState(
+  const [authToken, setAuthToken] = useState(
     () => JSON.parse(localStorage.getItem("authToken")) || null
   );
+
+  const navigate = useNavigate(); // Make sure navigate is defined here
   const [user, setUser] = useState(() =>
     authToken ? jwtDecode(authToken.access) : null
   );
-  const navigate = useNavigate();
-  const [loading, setloading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Check if token exists on component mount
     const token = JSON.parse(localStorage.getItem("authToken"));
-
     if (token) {
-      setauthToken(token);
+      setAuthToken(token);
       setUser(jwtDecode(token.access));
-    } else {
-      navigate("/login"); // Navigate to login if no token is found
     }
-  }, [navigate]);
+  }, []);
 
   const logout = useCallback(() => {
-    setauthToken(null);
+    setAuthToken(null);
     setUser(null);
     localStorage.removeItem("authToken");
-    navigate("/login");
-  }, [navigate]);
+    navigate("/login"); // Use navigate instead of navigation
+  }, [navigate]); // Add navigate to dependency array
 
-  // Wrap UpdateToken in useCallback
-  const UpdateToken = useCallback(async () => {
-    console.log("update token");
-
+  const updateToken = useCallback(async () => {
+    console.log("Updating token...");
     const response = await fetch("http://localhost:8000/api/token/refresh/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        refresh: authToken?.refresh,
-      }),
+      body: JSON.stringify({ refresh: authToken?.refresh }),
     });
-
     const data = await response.json();
-
     if (response.status === 200) {
-      setauthToken(data);
+      setAuthToken(data);
       setUser(jwtDecode(data.access));
       localStorage.setItem("authToken", JSON.stringify(data));
-      console.log(JSON.stringify(data));
     } else {
       logout();
     }
-
-    if (loading) {
-      setloading(false);
-    }
-  }, [authToken, loading]); // Add logout to the dependency array
+    setLoading(false);
+  }, [authToken, logout]);
 
   useEffect(() => {
     if (loading) {
-      UpdateToken();
+      updateToken();
     }
-
-    let fourMinuteInterval = 240000;
     const interval = setInterval(() => {
       if (authToken) {
-        UpdateToken();
+        updateToken();
       }
-    }, fourMinuteInterval);
-
+    }, 240000); // 4-minute interval
     return () => clearInterval(interval);
-  }, [authToken, loading, UpdateToken]); // Add UpdateToken to dependency array
+  }, [authToken, loading, updateToken]);
 
   const login = async (username, password) => {
-    console.log("Form submitted");
-
+    console.log("Logging in...");
     const response = await fetch("http://127.0.0.1:8000/api/token/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
+      body: JSON.stringify({ username, password }),
+    });
+    const data = await response.json();
+    if (response.status === 200) {
+      setAuthToken(data);
+      setUser(jwtDecode(data.access));
+      localStorage.setItem("authToken", JSON.stringify(data));
+      navigate("/Dashbord"); // Corrected navigation to navigate
+    } else {
+      throw new Error(data.error);
+    }
+  };
+
+  const Registration = async (formData) => {
+    console.log("registration...");
+
+    try {
+      const response = await fetch("http://127.0.0.1:8000/api/register", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          username: formData.username,
+          email: formData.email,
+          password: formData.password,
+          userprofile: {
+            birthday: formData.birthday,
+            sex: formData.sex,
+          },
+        }),
+      });
+
+      console.log(formData);
+
+      const data = await response.json();
+      if (response.status === 201) {
+        setAuthToken(data);
+        setUser(jwtDecode(data.access));
+        localStorage.setItem("authToken", JSON.stringify(data));
+        navigate("/Dashbord");
+      } else {
+        throw new Error(data.error);
+      }
+    } catch (error) {
+      console.error("Registration error:", error);
+      alert("Registration failed. Please try again.");
+    }
+  };
+
+  const CalorieBurnCalculator_api = async (
+    weight,
+    height,
+    duration,
+    activity
+  ) => {
+    const response = await fetch("http://localhost:8000/api/bmi", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify({
-        username: username,
-        password: password,
+        weight: weight,
+        height: height,
+        duration: duration,
+        activity: activity,
       }),
     });
 
     const data = await response.json();
 
     if (response.status === 200) {
-      setauthToken(data);
-      setUser(jwtDecode(data.access)); // Set user data
-      localStorage.setItem("authToken", JSON.stringify(data)); // Save token to localStorage
-      navigate("/Dashbord"); // Navigate to home after login
     } else {
-      throw new Error(data.error);
+      alert("Error calculating calories burned");
     }
   };
 
@@ -111,6 +153,8 @@ export const AuthProvider = ({ children }) => {
     user,
     logout,
     authToken,
+    Registration,
+    CalorieBurnCalculator_api,
   };
 
   return (
