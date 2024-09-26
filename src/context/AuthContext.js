@@ -1,7 +1,7 @@
 import { createContext, useState, useEffect, useCallback } from "react";
 import { jwtDecode } from "jwt-decode"; // Corrected the import for jwtDecode
 import { useNavigate } from "react-router-dom";
-
+import Speedometer from "../components/Speedometer";
 const AuthContext = createContext();
 
 export default AuthContext;
@@ -16,6 +16,7 @@ export const AuthProvider = ({ children }) => {
     authToken ? jwtDecode(authToken.access) : null
   );
   const [loading, setLoading] = useState(false);
+  const [refreshBMICalories, setRefreshBMICalories] = useState(false);
 
   useEffect(() => {
     const token = JSON.parse(localStorage.getItem("authToken"));
@@ -131,18 +132,21 @@ export const AuthProvider = ({ children }) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken?.access}`,
       },
       body: JSON.stringify({
         weight: weight,
         height: height,
-        duration: duration,
+        duration_hours: duration,
         activity: activity,
       }),
     });
 
     const data = await response.json();
 
-    if (response.status === 200) {
+    if (response.status === 201) {
+      console.log(`Calories burned: ${data.calories_burned}`);
+      setRefreshBMICalories(true);
     } else {
       alert("Error calculating calories burned");
     }
@@ -155,6 +159,8 @@ export const AuthProvider = ({ children }) => {
     authToken,
     Registration,
     CalorieBurnCalculator_api,
+    refreshBMICalories,
+    setRefreshBMICalories,
   };
 
   return (

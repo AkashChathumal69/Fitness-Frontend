@@ -4,7 +4,7 @@ import { Box } from "@mui/material";
 import AuthContext from "../context/AuthContext";
 
 const Speedometer = () => {
-  const { authToken } = useContext(AuthContext);
+  const { authToken, refreshBMICalories } = useContext(AuthContext);
   const [bmi, setbmi] = useState(0);
 
   useEffect(() => {
@@ -38,7 +38,7 @@ const Speedometer = () => {
       get_bmi();
       console.log(authToken.access);
     }
-  }, [authToken?.access]);
+  }, [authToken?.access, refreshBMICalories]);
 
   return (
     <Box flex={4} p={2}>
