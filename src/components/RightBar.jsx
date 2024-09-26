@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import AuthContext from "../context/AuthContext";
+import { useContext } from "react";
 import {
   Box,
   TextField,
@@ -9,37 +11,10 @@ import {
   FormControl,
   InputLabel,
 } from "@mui/material";
-import AuthContext from "../context/AuthContext";
-import { useContext } from "react";
-
-const CalorieBurnCalculator_api = async (
-  weight,
-  height,
-  duration,
-  activity
-) => {
-  const response = await fetch("http://localhost:8000/api/bmi", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      weight: weight,
-      height: height,
-      duration: duration,
-      activity: activity,
-    }),
-  });
-
-  const data = await response.json();
-
-  if (response.status === 200) {
-  } else {
-    alert("Error calculating calories burned");
-  }
-};
 
 const CalorieBurnCalculator = () => {
+  const { CalorieBurnCalculator_api } = useContext(AuthContext);
+
   const [weight, setWeight] = useState("");
   const [height, setHeight] = useState("");
   const [duration, setDuration] = useState("");

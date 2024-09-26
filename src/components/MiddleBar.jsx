@@ -11,7 +11,7 @@ const calorieFormatter = (calories) => `${calories.toFixed(2)} kcal`;
 const MiddleBar = () => {
   const [dates, setDates] = useState([]);
   const [calories, setCalories] = useState([]);
-  const { authToken } = useContext(AuthContext);
+  const { authToken, refreshBMICalories } = useContext(AuthContext);
 
   // For debugging purposes
   console.log(dates.map((date) => date.toDateString()));
@@ -55,7 +55,7 @@ const MiddleBar = () => {
     if (authToken?.access) {
       getCaloriesData();
     }
-  }, [authToken?.access]);
+  }, [authToken?.access, refreshBMICalories]);
 
   const lineChartsParams = {
     series: [
