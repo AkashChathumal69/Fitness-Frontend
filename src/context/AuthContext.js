@@ -67,7 +67,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (username, password) => {
     console.log("Logging in...");
-    const response = await fetch("http://127.0.0.1:8000/api/token/", {
+    const response = await fetch("http://localhost:8000/api/token/", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -89,7 +89,7 @@ export const AuthProvider = ({ children }) => {
     console.log("registration...");
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/register", {
+      const response = await fetch("http://localhost:8000/api/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -152,6 +152,29 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const get_diet = async () => {
+    try {
+      const response = await fetch("http://localhost:8000/api/get_diet", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${authToken?.access}`,
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.status === 200) {
+        console.log(data);
+        return data.diet_plan;
+      } else {
+        alert("No diet data found");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const contextData = {
     login,
     user,
@@ -161,6 +184,7 @@ export const AuthProvider = ({ children }) => {
     CalorieBurnCalculator_api,
     refreshBMICalories,
     setRefreshBMICalories,
+    get_diet,
   };
 
   return (
