@@ -1,5 +1,6 @@
 import "./App.css";
 import Dashbord from "./Pages/Dashbord";
+import Home from "./Pages/Home";
 import { Route, Routes } from "react-router-dom";
 import PrivateRoute from "./utils/PrivateRoute";
 import LoginPage from "./Pages/LoginPage";
@@ -30,6 +31,7 @@ function App() {
                 </PrivateRouteLogin>
               }
             />
+            <Route path="/" element={<Home />} />
             <Route
               path="/Dashbord"
               element={
