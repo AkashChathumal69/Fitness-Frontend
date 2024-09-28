@@ -4,7 +4,8 @@ import { Box } from "@mui/material";
 import AuthContext from "../context/AuthContext";
 
 const Speedometer = () => {
-  const { authToken, refreshBMICalories } = useContext(AuthContext);
+  const { authToken, refreshBMICalories, setRefreshBMICalories } =
+    useContext(AuthContext);
   const [bmi, setbmi] = useState(0);
 
   useEffect(() => {
@@ -26,6 +27,7 @@ const Speedometer = () => {
           const bmiValue = parseFloat(data[0].bmi);
           setbmi(bmiValue);
           console.log(`BMI: ${bmiValue}`);
+          setRefreshBMICalories(false);
         } else {
           alert("No BMI data found");
         }

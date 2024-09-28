@@ -31,7 +31,7 @@ const CalorieBurnCalculator = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log("Calorie Burn data:", weight, height, duration, activity);
-    CalorieBurnCalculator_api(weight, height, duration, activity); // Send the formatted data to the context function
+    CalorieBurnCalculator_api(weight, height, duration, activity);
   };
 
   return (
@@ -49,7 +49,7 @@ const CalorieBurnCalculator = () => {
         size="small"
       />
       <TextField
-        label="Height (cm)"
+        label="Height (m)"
         type="number"
         value={height}
         onChange={(e) => setHeight(e.target.value)}
